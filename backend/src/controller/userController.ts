@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import client from "../db";
 import jwt from "jsonwebtoken";
-
+import { JwtPayload } from "express";
 import bcrypt from "bcrypt";
 async function generateAccessAndRefreshToken(userId: number) {
   const user = await client.user.findFirst({
@@ -15,11 +15,6 @@ async function generateAccessAndRefreshToken(userId: number) {
   }
   try {
     const { id, name, email } = user;
-    interface JwtPayload {
-      _id: number;
-      name: string;
-      email: string;
-    }
 
     const payload: JwtPayload = {
       _id: id,
@@ -106,13 +101,20 @@ export const signIn = async (req: Request, res: Response) => {
   });
 
   if (!existingUser) {
-    //todo
+    res.status(404).json({ message: "user not registered" });
     return;
   }
-  const match = await bcrypt.compare(password, existingUser?.password);
+  let match = false;
+  if (existingUser.role === "USER") {
+    match = await bcrypt.compare(password, existingUser?.password);
+  } else {
+    if (existingUser.password === password) {
+      match = true;
+    }
+  }
 
   if (!match) {
-    //todo
+    res.status(400).json({ message: "password is incorrect" });
     return;
   }
 
@@ -133,11 +135,12 @@ export const signIn = async (req: Request, res: Response) => {
       role: true,
     },
   });
+
   res
     .status(200)
     .cookie("refreshToeken", refreshToken)
     .cookie("accessToken", accessToken)
-    .json({ existingUser });
+    .json({ loggedInUser });
 };
 
 export const signOut = async (req: Request, res: Response) => {};

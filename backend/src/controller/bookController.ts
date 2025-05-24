@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import client from "../db";
-
-interface newreq extends Request {
+import { uploadOnCloudinary } from "../utils/cloudinary";
+// import { newreq } from "../interfaces";
+export interface newreq extends Request {
+  user?: number;
   query: {
     page: string;
     limit: string;
@@ -48,6 +50,81 @@ export const getAllBooks = async (req: newreq, res: Response) => {
   }
 };
 
-export const getBook = async (req: Request, res: Response) => {};
+export const getBook = async (req: Request, res: Response) => {
+  const bookId = parseInt(req.params.id);
 
-export const addBook = async (req: Request, res: Response) => {};
+  if (!bookId) {
+    res.status(400).json({ message: "bookId required" });
+    return;
+  }
+
+  try {
+    const book = await client.book.findFirst({
+      where: {
+        id: bookId,
+      },
+    });
+
+    if (!book) {
+      res.status(404).json({ message: `no book are found of id ${bookId}` });
+      return;
+    }
+
+    res.status(200).json(book);
+  } catch (error) {
+    console.log(`interval server error ${error}`);
+    res.status(500).json({ message: `interval server error ${error}` });
+  }
+};
+
+export const addBook = async (req: Request, res: Response) => {
+  const userId = req.user;
+
+  if (req.admin == false) {
+    console.log("this is user cannot add books");
+    res.status(400).json({ message: "unauthorized request" });
+    return;
+  }
+  const title = req.body.title;
+  const country = req.body.country;
+  const Language = req.body.Language;
+  const Author = req.body.Author;
+  const Year = req.body.Year;
+  const page = parseInt(req.body.page);
+  const Link = req.body.Link;
+  const existingUser = await client.user.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+
+  const localFilePath = req.file;
+  console.log(localFilePath);
+  if (!localFilePath) {
+    res.status(404).json({ message: "need coverImage for creation of book" });
+    return;
+  }
+  if (!existingUser) {
+    console.log("invalid user");
+    return;
+  }
+  const coverImg = await uploadOnCloudinary(localFilePath);
+  console.log("covverimg", coverImg);
+  const book = await client.book.create({
+    data: {
+      title,
+      country,
+      coverImg,
+      Language,
+      Author,
+      Year,
+      page,
+      Link,
+      addedBy: existingUser?.id,
+    },
+  });
+  if (!book) {
+    res.status(400).json({ message: "book is not created" });
+  }
+  res.status(200).json(book);
+};

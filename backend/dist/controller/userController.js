@@ -95,12 +95,20 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         },
     });
     if (!existingUser) {
-        //todo
+        res.status(404).json({ message: "user not registered" });
         return;
     }
-    const match = yield bcrypt_1.default.compare(password, existingUser === null || existingUser === void 0 ? void 0 : existingUser.password);
+    let match = false;
+    if (existingUser.role === "USER") {
+        match = yield bcrypt_1.default.compare(password, existingUser === null || existingUser === void 0 ? void 0 : existingUser.password);
+    }
+    else {
+        if (existingUser.password === password) {
+            match = true;
+        }
+    }
     if (!match) {
-        //todo
+        res.status(400).json({ message: "password is incorrect" });
         return;
     }
     const { accessToken, refreshToken } = yield generateAccessAndRefreshToken(existingUser.id);
@@ -120,7 +128,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         .status(200)
         .cookie("refreshToeken", refreshToken)
         .cookie("accessToken", accessToken)
-        .json({ existingUser });
+        .json({ loggedInUser });
 });
 exports.signIn = signIn;
 const signOut = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });

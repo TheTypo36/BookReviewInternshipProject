@@ -21,5 +21,5 @@ app.use("/api/v1/book", bookRoute_1.default);
 // app.use("/api/v1/review");
 const PORT = process.env.PORT || 8086;
 app.listen(PORT, () => {
-    console.log(`serve is running at ${PORT} port`);
+    console.log(`server is running at ${PORT} port`);
 });
