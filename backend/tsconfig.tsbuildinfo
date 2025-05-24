@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/controller/bookcontroller.ts","./src/controller/reviewcontroller.ts","./src/controller/usercontroller.ts","./src/db/index.ts","./src/routes/bookroute.ts","./src/routes/reviewroute.ts","./src/routes/userroute.ts"],"version":"5.8.3"}

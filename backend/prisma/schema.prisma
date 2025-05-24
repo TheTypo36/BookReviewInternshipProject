@@ -7,29 +7,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//because we want a admin type of user and normal user so we are defining a enum of it
+
+enum Role{
+    USER
+    ADMIN
+}
+
 
 
 model Book{
   id                Int @default(autoincrement()) @unique
-  name              String 
-  description       String
+  title             String 
+  country           String
   coverImg          String
+  Language          String
   Author            String
-  release_date      DateTime
-  sale              String
-  userId            Int
+  Year              String
+  page              Int
+  Link              String
+  addedBy           Int  //admin who added this book
   reviews           Review[]
-  user              User @relation(fields: [userId], references: [id]) // foreign key to user's id
-
-  
+  admin              User @relation(fields: [addedBy], references: [id]) // foreign key to user's id
+  createdAt          DateTime @default(now())
+  readList          ReadList[]  //every readlist whose part is this book
 }
 
 model User{
-  id        Int @default(autoincrement()) @unique
-  name      String
-  books     Book[] 
-  reviews   Review[]
-
+  id            Int @default(autoincrement()) @unique
+  name          String
+  email         String @unique
+  password      String
+  role          Role @default(USER)
+  books         Book[] 
+  reviews       Review[]
+  readList      ReadList[]
+  refreshToken  String
+  createdAt     DateTime @default(now())
 }
 
 model Review{
@@ -41,4 +55,16 @@ model Review{
     bookId        Int
     book          Book @relation(fields: [bookId], references: [id]) //foreign key to book's id
     user          User @relation(fields: [userId], references: [id]) //foreign key to user's id
+}
+
+model ReadList{
+    id       Int @default(autoincrement()) @unique
+    userId   Int
+    bookId   Int
+
+    user    User @relation(fields: [userId], references: [id])
+    book    Book @relation(fields: [bookId], references: [id])
+
+    //one book only time in user List 
+    @@unique([userId,bookId])
 }
