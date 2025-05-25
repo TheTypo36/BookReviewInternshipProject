@@ -10,9 +10,9 @@ import { upload } from "../middleware/multer";
 
 const router = Router();
 
-router.route("/getAllBooks").get(getAllBooks);
+router.route("/get-all-books").get(getAllBooks);
 
-router.route("/getBook/:id").get(getBook);
+router.route("/get-book/:id").get(getBook);
 
 router
   .route("/add-book")
