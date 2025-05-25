@@ -10,4 +10,5 @@ router.route("/getBook/:id").get(bookController_1.getBook);
 router
     .route("/add-book")
     .post(multer_1.upload.single("coverImg"), auth_1.verifyJwt, auth_1.adminVerify, bookController_1.addBook);
+router.route("/remove-book").delete(auth_1.verifyJwt, auth_1.adminVerify, bookController_1.removeBook);
 exports.default = router;

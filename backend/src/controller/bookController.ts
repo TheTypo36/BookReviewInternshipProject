@@ -128,3 +128,42 @@ export const addBook = async (req: Request, res: Response) => {
   }
   res.status(200).json(book);
 };
+
+export const removeBook = async (req: Request, res: Response) => {
+  try {
+    const bookId = parseInt(req.query?.bookId);
+
+    if (!req.admin) {
+      res
+        .status(404)
+        .json({ message: "authorized req: only admin can remove the book" });
+      return;
+    }
+
+    await client.book.delete({
+      where: {
+        id: bookId,
+      },
+    });
+
+    const stillExist = await client.book.findFirst({
+      where: { id: bookId },
+    });
+
+    if (stillExist) {
+      res.status(404).json({
+        message: "error in deletion book is still there after deletion",
+      });
+      return;
+    }
+
+    res
+      .status(200)
+      .json({ message: "book is successfully remove from database" });
+  } catch (error) {
+    console.log(`internal server error in deletion of book ${error}`);
+    res
+      .status(500)
+      .json({ message: `internal server error in deletion of book ${error}` });
+  }
+};

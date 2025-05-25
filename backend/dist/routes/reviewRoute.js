@@ -8,4 +8,5 @@ const auth_1 = require("../middleware/auth");
 const reviewController_1 = require("../controller/reviewController");
 const router = (0, express_1.default)();
 router.route("/write-review").post(auth_1.verifyJwt, reviewController_1.submitReview);
+router.route("/get-review").get(reviewController_1.getReview);
 exports.default = router;

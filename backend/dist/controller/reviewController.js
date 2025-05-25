@@ -16,7 +16,7 @@ exports.submitReview = exports.getReview = void 0;
 const db_1 = __importDefault(require("../db"));
 const getReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const bookId = (_a = req.query) === null || _a === void 0 ? void 0 : _a.bookId;
+    const bookId = parseInt((_a = req.query) === null || _a === void 0 ? void 0 : _a.bookId);
     if (!bookId) {
         res
             .status(404)
@@ -51,8 +51,8 @@ const submitReview = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             return;
         }
         const content = req.body.content;
-        const rating = req.body.rating;
-        const bookId = (_a = req.query) === null || _a === void 0 ? void 0 : _a.bookId;
+        const rating = parseInt(req.body.rating);
+        const bookId = parseInt((_a = req.query) === null || _a === void 0 ? void 0 : _a.bookId);
         const review = yield db_1.default.review.create({
             data: {
                 content,

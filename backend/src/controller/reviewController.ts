@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import client from "../db";
 
 export const getReview = async (req: Request, res: Response) => {
-  const bookId = req.query?.bookId;
+  const bookId = parseInt(req.query?.bookId);
 
   if (!bookId) {
     res
@@ -42,8 +42,8 @@ export const submitReview = async (req: Request, res: Response) => {
     }
 
     const content = req.body.content;
-    const rating = req.body.rating;
-    const bookId = req.query?.bookId;
+    const rating = parseInt(req.body.rating);
+    const bookId = parseInt(req.query?.bookId);
 
     const review = await client.review.create({
       data: {

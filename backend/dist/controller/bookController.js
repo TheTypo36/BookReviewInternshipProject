@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addBook = exports.getBook = exports.getAllBooks = void 0;
+exports.removeBook = exports.addBook = exports.getBook = exports.getAllBooks = void 0;
 const db_1 = __importDefault(require("../db"));
 const cloudinary_1 = require("../utils/cloudinary");
 const getAllBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -128,3 +128,39 @@ const addBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json(book);
 });
 exports.addBook = addBook;
+const removeBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const bookId = parseInt((_a = req.query) === null || _a === void 0 ? void 0 : _a.bookId);
+        if (!req.admin) {
+            res
+                .status(404)
+                .json({ message: "authorized req: only admin can remove the book" });
+            return;
+        }
+        yield db_1.default.book.delete({
+            where: {
+                id: bookId,
+            },
+        });
+        const stillExist = yield db_1.default.book.findFirst({
+            where: { id: bookId },
+        });
+        if (stillExist) {
+            res.status(404).json({
+                message: "error in deletion book is still there after deletion",
+            });
+            return;
+        }
+        res
+            .status(200)
+            .json({ message: "book is successfully remove from database" });
+    }
+    catch (error) {
+        console.log(`internal server error in deletion of book ${error}`);
+        res
+            .status(500)
+            .json({ message: `internal server error in deletion of book ${error}` });
+    }
+});
+exports.removeBook = removeBook;
