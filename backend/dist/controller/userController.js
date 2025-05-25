@@ -126,7 +126,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
     res
         .status(200)
-        .cookie("refreshToeken", refreshToken)
+        .cookie("refreshToken", refreshToken)
         .cookie("accessToken", accessToken)
         .json({ loggedInUser });
 });

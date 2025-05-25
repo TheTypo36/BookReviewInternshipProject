@@ -11,6 +11,7 @@ declare module "express" {
     query?: {
       page?: string;
       limit?: string;
+      bookId?: Int;
     };
   }
 

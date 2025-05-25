@@ -138,7 +138,7 @@ export const signIn = async (req: Request, res: Response) => {
 
   res
     .status(200)
-    .cookie("refreshToeken", refreshToken)
+    .cookie("refreshToken", refreshToken)
     .cookie("accessToken", accessToken)
     .json({ loggedInUser });
 };
