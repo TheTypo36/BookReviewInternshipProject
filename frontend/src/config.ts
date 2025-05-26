@@ -7,13 +7,13 @@ const API_URLS = {
   LOGIN: () => `${BASE_URL}${import.meta.env.VITE_USER_SIGN_IN}`,
   LOGOUT: () => `${BASE_URL}${import.meta.env.VITE_USER_SIGN_OUT}`,
   REGISTER: () => `${BASE_URL}${import.meta.env.VITE_USER_REGISTER}`,
-  ADD_BOOK: (page: number, limit: number) =>
-    `${BASE_URL}${
-      import.meta.env.VITE_BOOK_ADD_BOOK
-    }?page=${page}&limit=${limit}`,
+  ADD_BOOK: () => `${BASE_URL}${import.meta.env.VITE_BOOK_ADD_BOOK}`,
   REMOVE_BOOK: (bookId: number) =>
     `${BASE_URL}${import.meta.env.VITE_BOOK_REMOVE_BOOK}?bookId=${bookId}`,
-  GET_ALL_BOOKS: () => `${BASE_URL}${import.meta.env.VITE_BOOK_GET_ALL_BOOK}`,
+  GET_ALL_BOOKS: (page: number, limit: number) =>
+    `${BASE_URL}${
+      import.meta.env.VITE_BOOK_GET_ALL_BOOK
+    }?page=${page}&limit=${limit}`,
   GET_BOOK: (bookId: number) =>
     `${BASE_URL}${import.meta.env.VITE_BOOK_GET_A_BOOK}/${bookId}`,
   WRITE_REVIEW: (bookId: number) =>
