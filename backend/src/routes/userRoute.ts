@@ -13,7 +13,7 @@ import { verifyJwt } from "../middleware/auth";
 
 const router = Router();
 router.route("/register").post(register);
-router.route("/sign-in").get(signIn);
+router.route("/sign-in").post(signIn);
 router.route("/sign-out").get(verifyJwt, signOut);
 router.route("/update-user").put(verifyJwt, updateUser);
 router.route("/get-profile").get(getProfile);

@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+body {
+  background: linear-gradient(to left, lightblue, lavender);
+  font-family: cursive;
+}

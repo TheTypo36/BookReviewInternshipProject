@@ -28,7 +28,11 @@ const getReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             id: bookId,
         },
         include: {
-            reviews: true,
+            reviews: {
+                include: {
+                    user: true,
+                },
+            },
         },
     });
     if (!book) {
@@ -53,6 +57,10 @@ const submitReview = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const content = req.body.content;
         const rating = parseInt(req.body.rating);
         const bookId = parseInt((_a = req.query) === null || _a === void 0 ? void 0 : _a.bookId);
+        if (!content || !rating || !bookId) {
+            res.status(400).json({ message: "missing content or rating or bookid" });
+            return;
+        }
         const review = yield db_1.default.review.create({
             data: {
                 content,

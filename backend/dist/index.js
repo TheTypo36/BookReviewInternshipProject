@@ -13,7 +13,12 @@ app.use(express_1.default.json({ limit: "16kb" }));
 app.use(express_1.default.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express_1.default.static("public"));
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // **Replace with your actual frontend URL**
+    credentials: true, // <--- THIS IS THE KEY!
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // It's good practice to list allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // It's good practice to list allowed headers
+}));
 app.get("/", (req, res) => {
     res.send("<h1>hello world</h1>");
 });

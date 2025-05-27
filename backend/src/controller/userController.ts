@@ -3,6 +3,12 @@ import client from "../db";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "express";
 import bcrypt from "bcrypt";
+
+const options = {
+  httpOnly: true,
+  secure: true, // Must be true when SameSite is 'None'
+  sameSite: "none" as "none", // Explicitly set 'none'
+};
 async function generateAccessAndRefreshToken(userId: number) {
   const user = await client.user.findFirst({
     where: {
@@ -61,12 +67,17 @@ export const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    console.log("name", name, "email", email, password, "password");
+
     if (!name || !email || !password) {
       console.log("required field are missing");
       res.status(404).json({ message: "required Fields are missing" });
     }
 
+    console.log("we are here1");
+
     const hashPassword = await bcrypt.hash(password, 10);
+    console.log("we are here2");
 
     const user = await client.user.create({
       data: {
@@ -77,14 +88,18 @@ export const register = async (req: Request, res: Response) => {
         refreshToken: "",
       },
     });
+    console.log("we are here3");
 
     if (!user) {
       res.status(400).json({ message: "user is not created" });
       return;
     }
+    console.log("we are here4");
 
     res.status(200).json(user);
   } catch (error) {
+    console.log("we are here5");
+
     console.log("internal server error", error);
     res.status(500).json({ message: `error in registering of user ${error}` });
   }
@@ -124,11 +139,15 @@ export const signIn = async (req: Request, res: Response) => {
 
   existingUser.refreshToken = refreshToken;
 
-  const loggedInUser = await client.user.findFirst({
+  const loggedInUser = await client.user.update({
     where: {
       id: existingUser.id,
     },
+    data: {
+      refreshToken: refreshToken,
+    },
     select: {
+      id: true,
       name: true,
       email: true,
       createdAt: true,
@@ -140,10 +159,40 @@ export const signIn = async (req: Request, res: Response) => {
     .status(200)
     .cookie("refreshToken", refreshToken)
     .cookie("accessToken", accessToken)
-    .json({ loggedInUser });
+    .json({ loggedInUser, accessToken });
 };
 
-export const signOut = async (req: Request, res: Response) => {};
+export const signOut = async (req: Request, res: Response) => {
+  try {
+    console.log("cookie", req.cookies);
+
+    const user = await client.user.findFirst({
+      where: {
+        id: req.user,
+      },
+    });
+    if (!user) {
+      res.status(404).json({ message: "user not found" });
+      return;
+    }
+
+    await client.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        refreshToken: "",
+      },
+    });
+    res.status(200).json({ message: "logged out the user" });
+  } catch (error) {
+    res
+      .status(500)
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .json({ message: ` internal server error in loggingout  ${error}` });
+  }
+};
 
 export const updateUser = async (req: Request, res: Response) => {};
 

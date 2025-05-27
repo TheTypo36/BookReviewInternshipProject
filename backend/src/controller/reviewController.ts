@@ -16,7 +16,11 @@ export const getReview = async (req: Request, res: Response) => {
       id: bookId,
     },
     include: {
-      reviews: true,
+      reviews: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 
@@ -45,6 +49,10 @@ export const submitReview = async (req: Request, res: Response) => {
     const rating = parseInt(req.body.rating);
     const bookId = parseInt(req.query?.bookId);
 
+    if (!content || !rating || !bookId) {
+      res.status(400).json({ message: "missing content or rating or bookid" });
+      return;
+    }
     const review = await client.review.create({
       data: {
         content,

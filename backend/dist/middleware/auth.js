@@ -20,7 +20,8 @@ const verifyJwt = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     try {
         const token = ((_a = req.cookies) === null || _a === void 0 ? void 0 : _a.accessToken) ||
             ((_b = req.header("Authorization")) === null || _b === void 0 ? void 0 : _b.replace("Bearer ", ""));
-        console.log("in verify jwt", req.cookies);
+        console.log("in verify jwt", req.cookies.accessToken);
+        console.log("req header", req.header("Authorization"));
         if (!token) {
             throw new Error("unauthorized request");
         }
