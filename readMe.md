@@ -130,6 +130,10 @@ npm i
 npm run dev
 
 # remember to add .env file in both frontend and backend
+
+# a frontend .env file will provided keep in the root frontend folder
+
+# similiar a backend .env file will be provided keep it in backend .env folder
 ```
 
 ## postman api route collection
