@@ -111,9 +111,31 @@ Follow these steps to get the BookReviewFun project up and running on your local
 - PostgreSQL database server (running locally or accessible via a cloud provider like Neon.tech)
 - Git
 
-### Cloning the Repository
+### Cloning the Repository and run the project
 
 ```bash
 git clone <your-repo-url>
 cd bookReviewFun # Or whatever your project's root folder is named
+
+
+
+cd frontend
+npm i
+npm run dev
+
+
+# open second terminal
+cd backend
+npm i
+npm run dev
+
+# remember to add .env file in both frontend and backend
 ```
+
+## postman api route collection
+
+[All the Routes](https://galactic-astronaut-566580.postman.co/workspace/backend~caffbc7f-5477-4442-8c6d-fb46d774e4c9/collection/16063518-5582a807-0224-4d72-9327-3c7d0e6dc1ea?action=share&creator=16063518)
+
+### directory structure
+
+![alt text](image.png)
