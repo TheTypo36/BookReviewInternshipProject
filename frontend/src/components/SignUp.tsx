@@ -3,8 +3,10 @@ import { useState } from "react";
 import { API_URLS } from "../config";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 function SignUp() {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,19 +24,34 @@ function SignUp() {
         console.log(Response.data);
         if (Response) {
           toast.success("user registered successfully!!");
+          axios
+            .post(
+              API_URLS.LOGIN(),
+              {
+                email,
+                password,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((reponse) => {
+              console.log(reponse.data);
+              signIn(reponse.data.loggedInUser, reponse.data.accessToken);
+              toast.success("signed In");
+              navigate("/");
+            });
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         toast.error("registration failed");
-      })
-      .finally(() => {
-        navigate("/sign-in");
       });
   };
   return (
     <div className="mt-60 sm:w-100  lg:w-200 mx-auto p-5 min-xl rounded-xl text-xl shadow-xl ">
       <ToastContainer
-        position="top-right"
+        position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}

@@ -31,15 +31,22 @@ function BookList() {
           Language={book.Language}
         />
       ))}
-
-      <button onClick={() => setPage(pagination?.prevPage || 1)}>
-        prevPage
-      </button>
-      <div>currpage: {page}</div>
-      <button onClick={() => setPage(pagination?.nextPage || 1)}>
-        nextPage
-      </button>
-      <div>totalPages: {pagination?.totalPage}</div>
+      <div className="mx-auto flex flex-roww-full justify-center items-center   opacity-20 ">
+        <button
+          onClick={() => setPage(pagination?.prevPage || 1)}
+          className="m-2 h-10 w-20 shadow-sm rounded-sm cursor-pointer  bg-red-700 text-white"
+          disabled={page === 1}
+        >
+          prevPage
+        </button>
+        <button
+          onClick={() => setPage(pagination?.nextPage || 1)}
+          className="m-2 h-10 w-20 shadow-sm  cursor-pointer rounded-sm bg-red-700 text-white"
+          disabled={page === pagination?.totalPage}
+        >
+          nextPage
+        </button>
+      </div>
     </div>
   );
 }

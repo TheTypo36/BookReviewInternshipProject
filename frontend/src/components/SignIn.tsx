@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
 import { API_URLS } from "../config";
 import { useNavigate } from "react-router-dom";
 
@@ -24,14 +26,32 @@ function SignIn() {
         }
       )
       .then((reponse) => {
+        if (reponse.status == 200 || reponse.status == 202) {
+          toast.success("signed in");
+          navigate("/");
+        }
         console.log(reponse.data);
         signIn(reponse.data.loggedInUser, reponse.data.accessToken);
-
-        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("failed to sign in");
       });
   };
   return (
     <div className="mt-60 w-100 mx-auto p-5 min-xl rounded-xl text-xl shadow-xl ">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <h1 className="text-2xl text-center m-5 font-bold text-purple-800">
         SignIn
       </h1>
