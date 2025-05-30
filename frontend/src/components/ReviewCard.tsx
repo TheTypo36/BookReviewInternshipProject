@@ -30,7 +30,7 @@ interface ReviewCardProps {
 
 function ReviewCard({ bookId }: ReviewCardProps) {
   const navigate = useNavigate();
-  const { userId, token, isLoggedIn, isAdmin } = useAuth(); // userId can be null if not logged in
+  const { userId, token, isLoggedIn } = useAuth(); // userId can be null if not logged in
   const [reviews, setReviews] = useState<ReviewInterface[] | null>(null); // Corrected type to array
   const [reviewsLoading, setReviewsLoading] = useState<boolean>(true); // Initial state true
   const [reviewsError, setReviewsError] = useState<string | null>(null); // Changed type to string | null

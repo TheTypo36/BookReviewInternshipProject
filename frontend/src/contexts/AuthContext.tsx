@@ -90,6 +90,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUserRole(role);
     setUserEmail(email); // Corrected: Use the 'email' parameter
     setToken(newToken);
+    console.log(userEmail, userRole);
 
     // Store data in localStorage (localStorage only stores strings)
     localStorage.setItem("username", name);

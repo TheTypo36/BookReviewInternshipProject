@@ -4,8 +4,6 @@ import axios from "axios";
 import { API_URLS } from "../config";
 import { ToastContainer, toast } from "react-toastify";
 
-import { useEffect, useState } from "react";
-
 function Header() {
   const { userName, isAdmin, signOut, isLoggedIn } = useAuth();
   const navigate = useNavigate();
