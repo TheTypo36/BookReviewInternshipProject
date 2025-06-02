@@ -9,13 +9,13 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
-console.log(process.env.FRONTENT_URL);
 
 const currOrigin =
-  process.env.NODE_ENV == "production"
+  process.env.NODE_ENV == "Production"
     ? process.env.FRONTEND_URL
     : "http://localhost:5173";
 
+console.log(process.env.FRONTEND_URL);
 console.log(currOrigin);
 app.use(
   cors({
