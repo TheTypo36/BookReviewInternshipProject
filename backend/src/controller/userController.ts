@@ -166,26 +166,20 @@ export const signOut = async (req: Request, res: Response) => {
   try {
     console.log("cookie", req.cookies);
 
-    const userId = req.user;
-    const user = await client.user.findFirst({
+    await client.user.updateMany({
       where: {
-        id: userId,
-      },
-    });
-    if (!user) {
-      res.status(404).json({ message: "user not found" });
-      return;
-    }
-
-    await client.user.update({
-      where: {
-        id: user.id,
+        refreshToken: req.cookies.refreshToken,
       },
       data: {
         refreshToken: "",
       },
     });
-    res.status(200).json({ message: "logged out the user" });
+
+    res
+      .status(200)
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .json({ message: "logged out the user" });
   } catch (error) {
     res
       .status(500)

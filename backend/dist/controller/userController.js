@@ -149,24 +149,19 @@ exports.signIn = signIn;
 const signOut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("cookie", req.cookies);
-        const user = yield db_1.default.user.findFirst({
+        yield db_1.default.user.updateMany({
             where: {
-                id: req.user,
-            },
-        });
-        if (!user) {
-            res.status(404).json({ message: "user not found" });
-            return;
-        }
-        yield db_1.default.user.update({
-            where: {
-                id: user.id,
+                refreshToken: req.cookies.refreshToken,
             },
             data: {
                 refreshToken: "",
             },
         });
-        res.status(200).json({ message: "logged out the user" });
+        res
+            .status(200)
+            .clearCookie("accessToken", options)
+            .clearCookie("refreshToken", options)
+            .json({ message: "logged out the user" });
     }
     catch (error) {
         res
