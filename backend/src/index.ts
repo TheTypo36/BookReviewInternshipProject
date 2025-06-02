@@ -9,6 +9,7 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
+console.log(process.env.FRONTENT_URL);
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173", // **Replace with your actual frontend URL**

@@ -166,9 +166,10 @@ export const signOut = async (req: Request, res: Response) => {
   try {
     console.log("cookie", req.cookies);
 
+    const userId = req.user;
     const user = await client.user.findFirst({
       where: {
-        id: req.user,
+        id: userId,
       },
     });
     if (!user) {
