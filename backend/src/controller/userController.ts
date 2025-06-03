@@ -193,7 +193,38 @@ export const updateUser = async (req: Request, res: Response) => {};
 
 export const getProfile = async (req: Request, res: Response) => {};
 
-export const getReadList = async (req: Request, res: Response) => {};
+export const getReadList = async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req?.query?.user);
+    if (!userId) {
+      res.status(404).json({ message: "no user found" });
+      return;
+    }
+
+    const user = client.user.findFirst({
+      where: {
+        id: userId,
+      },
+      include: {
+        readList: {
+          include: {
+            book: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      res.status(400).json({ message: "no readList found in the data base" });
+      return;
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error(`internal server error ${error}`);
+    return;
+  }
+};
 
 export const addToReadList = async (req: Request, res: Response) => {};
 

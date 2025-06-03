@@ -14,7 +14,7 @@ function BookProfile() {
   const imageUrl = bookId <= 100 ? `/${book?.coverImg}` : book?.coverImg;
 
   return (
-    <div className="mt-30 p-1 min-h-l w-6xl shadow-xl rounded-2xl relative m-auto flex flex-col lg:flex-row">
+    <div className="mt-30 p-1 min-h-l lg:w-6xl shadow-xl rounded-2xl relative m-auto flex flex-col lg:flex-row">
       <div>
         <div className="text-2xl ml-5 font-bold h-10 rounded-xl  text-purple-500 hover:cursor-pointer p-2 mb-2">
           {book?.title}
@@ -22,7 +22,7 @@ function BookProfile() {
         <a href={book?.Link}>
           <img
             src={imageUrl}
-            className="hover:cursor-pointer hover:scale-105 w-120 m-5"
+            className="hover:cursor-pointer hover:scale-105 lg:w-120 m-5"
           />
         </a>
       </div>

@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import AddBook from "./components/AddBook";
+import ReadList from "./components/readList";
 function App() {
   return (
     <AuthProvider>
@@ -19,6 +20,7 @@ function App() {
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/add-book" element={<AddBook />} />
+            <Route path="/read-list" element={<ReadList />} />
           </Routes>
         </BrowserRouter>
       </BookProvider>

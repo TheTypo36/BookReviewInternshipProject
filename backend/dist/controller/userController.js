@@ -178,7 +178,34 @@ const getProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.getProfile = getProfile;
 const getReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
 exports.getReadList = getReadList;
-const addToReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
+const addToReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = parseInt((_a = req === null || req === void 0 ? void 0 : req.query) === null || _a === void 0 ? void 0 : _a.user);
+        if (!userId) {
+            res.status(404).json({ message: "no user found" });
+            return;
+        }
+        const user = db_1.default.user.findFirst({
+            where: {
+                id: userId,
+            },
+            select: {
+                name: true,
+                readList: true,
+            },
+        });
+        if (!user) {
+            res.status(400).json({ message: "no readList found in the data base" });
+            return;
+        }
+        res.status(200).json({ user });
+    }
+    catch (error) {
+        console.error(`internal server error ${error}`);
+        return;
+    }
+});
 exports.addToReadList = addToReadList;
 const deleteFromReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
 exports.deleteFromReadList = deleteFromReadList;

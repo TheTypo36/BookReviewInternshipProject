@@ -7,6 +7,9 @@ import { ToastContainer, toast } from "react-toastify";
 function Header() {
   const { userName, isAdmin, signOut, isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const handleReadList = () => {
+    navigate("/read-list");
+  };
   const handleSignOut = async () => {
     await axios
       .get(API_URLS.LOGOUT(), { withCredentials: true })
@@ -25,7 +28,7 @@ function Header() {
   };
 
   return (
-    <div className="w-full h-10 flex flex-row justify-between items-center p-15 font-bold text-2xl text-white bg-red-500 fixed top-0 left-0 font-sans z-10">
+    <div className="w-full h-25 p-5 pl-0 grid grid-flow-col grid-row-1 font-bold lg:text-4xl text-xl  text-white bg-red-500 fixed top-0 left-0 font-sans z-10">
       <ToastContainer
         position="bottom-right"
         autoClose={5000}
@@ -38,24 +41,27 @@ function Header() {
         pauseOnHover
         theme="light"
       />
-      <h1 onClick={() => navigate("/")} className="hover:cursor-pointer">
+      <div onClick={() => navigate("/")} className="hover:cursor -ml-20">
         bookReview Fun
-      </h1>
+      </div>
       <div>
         {isLoggedIn ? (
-          <div className="flex flex-row justify-around">
+          <div className="flex">
             <div className="">{userName}</div>
             <div className="cursor-pointer mx-3" onClick={handleSignOut}>
               signOut
+            </div>
+            <div className="cursor-pointer mx-3" onClick={handleReadList}>
+              ReadList
             </div>
             {isAdmin && (
               <div onClick={() => navigate("/add-book")}>AddBook</div>
             )}
           </div>
         ) : (
-          <div className="flex flex-row">
+          <div className="flex lg:flex-row md:flex-row flex-col">
             <div
-              className="cursor-pointer m-2"
+              className="cursor-pointer"
               onClick={() => navigate("/sign-in")}
             >
               signIn
