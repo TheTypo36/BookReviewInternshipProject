@@ -7,7 +7,7 @@ import Header from "./components/Header";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import AddBook from "./components/AddBook";
-import ReadList from "./components/readList";
+import ReadList from "./components/ReadList";
 function App() {
   return (
     <AuthProvider>
