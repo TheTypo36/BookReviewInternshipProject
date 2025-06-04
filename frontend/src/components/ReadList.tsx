@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { API_URLS } from "../config";
 import axios from "axios";
-import type { bookInterface } from "../contexts/BookContenxt";
 import ReadListCard from "./ReadListCard";
 function ReadList() {
   const { userName, userId } = useAuth();
