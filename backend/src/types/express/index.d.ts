@@ -12,7 +12,7 @@ declare module "express" {
       page?: string;
       limit?: string;
       bookId?: Int;
-      user?: Int;
+      userId?: Int;
     };
   }
 

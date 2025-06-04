@@ -176,35 +176,71 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.updateUser = updateUser;
 const getProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
 exports.getProfile = getProfile;
-const getReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
-exports.getReadList = getReadList;
-const addToReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const userId = parseInt((_a = req === null || req === void 0 ? void 0 : req.query) === null || _a === void 0 ? void 0 : _a.user);
+        const userId = parseInt((_a = req === null || req === void 0 ? void 0 : req.query) === null || _a === void 0 ? void 0 : _a.userId);
         if (!userId) {
-            res.status(404).json({ message: "no user found" });
+            res.status(404).json({ message: "required userid" });
             return;
         }
-        const user = db_1.default.user.findFirst({
+        const readLists = yield db_1.default.readList.findMany({
             where: {
-                id: userId,
+                userId: userId,
             },
-            select: {
-                name: true,
-                readList: true,
+            include: {
+                user: true,
+                book: true,
             },
         });
-        if (!user) {
-            res.status(400).json({ message: "no readList found in the data base" });
+        if (!readLists) {
+            res
+                .status(404)
+                .json({ message: `no readlist found of this user ${userId}` });
             return;
         }
-        res.status(200).json({ user });
+        res.status(200).json({ readLists });
     }
     catch (error) {
         console.error(`internal server error ${error}`);
         return;
     }
+});
+exports.getReadList = getReadList;
+const addToReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const bookId = parseInt((_a = req.query) === null || _a === void 0 ? void 0 : _a.bookId);
+    const userId = req.user;
+    if (!bookId || !userId) {
+        res.status(404).json({ message: "book id and user Id is required" });
+    }
+    let book = yield db_1.default.book.findFirst({
+        where: {
+            id: bookId,
+        },
+    });
+    let user = yield db_1.default.book.findFirst({
+        where: {
+            id: userId,
+        },
+    });
+    if (!book || !user) {
+        res
+            .status(404)
+            .json({ message: "either the book or the user is not found" });
+        return;
+    }
+    const readList = yield db_1.default.readList.create({
+        data: {
+            bookId: book.id,
+            userId: user.id,
+        },
+    });
+    if (!readList) {
+        res.status(400).json({ message: "error in creating readlist" });
+        return;
+    }
+    res.status(200).json(readList);
 });
 exports.addToReadList = addToReadList;
 const deleteFromReadList = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });

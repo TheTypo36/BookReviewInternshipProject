@@ -9,6 +9,10 @@ const API_URLS = {
   REGISTER: () => `${BASE_URL}${import.meta.env.VITE_USER_REGISTER}`,
   GET_READ_LIST: (userId: number | null) =>
     `${BASE_URL}${import.meta.env.VITE_USER_GET_READ_LIST}?userId=${userId}`,
+  ADD_BOOK_TO_READ_LIST: (userId: number | null, bookId: number) =>
+    `${BASE_URL}${
+      import.meta.env.VITE_USER_ADD_BOOK_TO_READ_LIST
+    }?userId=${userId}&bookId=${bookId}`,
   ADD_BOOK: () => `${BASE_URL}${import.meta.env.VITE_BOOK_ADD_BOOK}`,
   REMOVE_BOOK: (bookId: number) =>
     `${BASE_URL}${import.meta.env.VITE_BOOK_REMOVE_BOOK}?bookId=${bookId}`,

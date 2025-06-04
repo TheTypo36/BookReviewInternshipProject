@@ -195,37 +195,75 @@ export const getProfile = async (req: Request, res: Response) => {};
 
 export const getReadList = async (req: Request, res: Response) => {
   try {
-    const userId = parseInt(req?.query?.user);
+    const userId = parseInt(req?.query?.userId);
+
     if (!userId) {
-      res.status(404).json({ message: "no user found" });
+      res.status(404).json({ message: "required userid" });
       return;
     }
 
-    const user = client.user.findFirst({
+    const readLists = await client.readList.findMany({
       where: {
-        id: userId,
+        userId: userId,
       },
       include: {
-        readList: {
-          include: {
-            book: true,
-          },
-        },
+        user: true,
+        book: true,
       },
     });
 
-    if (!user) {
-      res.status(400).json({ message: "no readList found in the data base" });
+    if (!readLists) {
+      res
+        .status(404)
+        .json({ message: `no readlist found of this user ${userId}` });
       return;
     }
-
-    res.status(200).json({ user });
+    res.status(200).json({ readLists });
   } catch (error) {
     console.error(`internal server error ${error}`);
     return;
   }
 };
 
-export const addToReadList = async (req: Request, res: Response) => {};
+export const addToReadList = async (req: Request, res: Response) => {
+  const bookId = parseInt(req.query?.bookId);
+  const userId = req.user;
+  if (!bookId || !userId) {
+    res.status(404).json({ message: "book id and user Id is required" });
+  }
+
+  let book = await client.book.findFirst({
+    where: {
+      id: bookId,
+    },
+  });
+  let user = await client.book.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!book || !user) {
+    res
+      .status(404)
+      .json({ message: "either the book or the user is not found" });
+
+    return;
+  }
+
+  const readList = await client.readList.create({
+    data: {
+      bookId: book.id,
+      userId: user.id,
+    },
+  });
+
+  if (!readList) {
+    res.status(400).json({ message: "error in creating readlist" });
+    return;
+  }
+
+  res.status(200).json(readList);
+};
 
 export const deleteFromReadList = async (req: Request, res: Response) => {};
